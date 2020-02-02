@@ -1,16 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class StartButton : MonoBehaviour
 {
-    public GameObject titleUi;
     public AudioSource click;
 
     public void StartGame()
     {
-        titleUi.SetActive(false);
         click.Play();
+        StartCoroutine(waiter());
+    }
+
+    IEnumerator waiter()
+    {
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene("SampleScene");
     }
 }
