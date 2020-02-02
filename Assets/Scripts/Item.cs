@@ -14,4 +14,14 @@ public class Item : MonoBehaviour
         gm = FindObjectOfType<Grid>();
         gm.grid[(int)transform.position.x][(int)transform.position.z] = 5 + itemType;
     }
+
+    private void Update()
+    {
+        if (gm.grid[(int)transform.position.x][(int)transform.position.z] == 0)
+        {
+            Destroy(gameObject);
+        }
+
+        itemType = gm.grid[(int)transform.position.x][(int)transform.position.z] - 5;
+    }
 }
