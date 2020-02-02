@@ -12,9 +12,9 @@ public class Grid : MonoBehaviour
         new int[] {1, 0, 0, 0, 0, 0, 0, 1},
         new int[] {1, 0, 0, 0, 0, 0, 0, 1},
         new int[] {1, 0, 0, 0, 0, 0, 0, 1},
-        new int[] {1, 1, 1, 1, 13, 1, 1, 1}};
+        new int[] {1, 1, 1, 1, 16, 1, 1, 1}};
 
-    //0=empty,1=obstacle,2=no,3=up/down car,4=left/right car,5-8=wheels,9=battery,7-12=canister,13=exit
+    //0=empty,1=obstacle,2=no,3=up/down car,4=left/right car,5-8=wheels,9=battery,10-15=canister,16=exit
 
     public override string ToString()
     {
