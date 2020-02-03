@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     public GameObject gasUi;
     public Text gasUiText;
     public GameObject car;
+    MeshRenderer ren;
 
     #endregion
 
@@ -103,6 +104,7 @@ public class Player : MonoBehaviour
     {
         gm = FindObjectOfType<Grid>();
         Debug.Log(gm.ToString());
+        ren = GetComponent<MeshRenderer>();
 
         cars = GameObject.FindGameObjectsWithTag("car");
     }
@@ -116,10 +118,12 @@ public class Player : MonoBehaviour
             carComp = car.GetComponent<Car>();
             carComp.UpdateUi();
             carUi.SetActive(true);
+            ren.enabled = false;
         }
         else
         {
             carUi.SetActive(false);
+            ren.enabled = true;
         }
 
         if (carComp && !isMoving && Input.GetKey(KeyCode.Space))

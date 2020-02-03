@@ -29,6 +29,11 @@ public class GameManager : MonoBehaviour
             playerScript.car.GetComponent<DriveOnClear>().enabled = true;
             StartCoroutine(LevelComplete());
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
     
     IEnumerator LevelComplete()

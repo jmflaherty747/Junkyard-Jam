@@ -16,6 +16,6 @@ public class StartButton : MonoBehaviour
     IEnumerator waiter()
     {
         yield return new WaitForSeconds(1);
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
