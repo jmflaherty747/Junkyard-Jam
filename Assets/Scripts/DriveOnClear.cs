@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DriveOnClear : MonoBehaviour
 {
+    Vector3 speedVector = new Vector3(5, 0, 0);
+
     private void Start()
     {
         enabled = false;
@@ -11,7 +13,6 @@ public class DriveOnClear : MonoBehaviour
 
     private void Update()
     {
-        var speedVector = new Vector3(5, 0, 0);
         transform.position += (speedVector * Time.deltaTime);
     }
 }

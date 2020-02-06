@@ -14,18 +14,18 @@ public class Item : MonoBehaviour
     private void Start()
     {
         gm = FindObjectOfType<Grid>();
-        gm.grid[(int)transform.position.x][(int)transform.position.z] = 5 + itemType;
+        gm.grid[Mathf.RoundToInt(transform.position.x)][Mathf.RoundToInt(transform.position.z)] = 5 + itemType;
         mat = GetComponent<Renderer>();
     }
 
     private void Update()
     {
-        if (gm.grid[(int)transform.position.x][(int)transform.position.z] == 0)
+        if (gm.grid[Mathf.RoundToInt(transform.position.x)][Mathf.RoundToInt(transform.position.z)] == 0)
         {
             Destroy(gameObject);
         }
 
-        itemType = gm.grid[(int)transform.position.x][(int)transform.position.z] - 5;
+        itemType = gm.grid[Mathf.RoundToInt(transform.position.x)][Mathf.RoundToInt(transform.position.z)] - 5;
 
         if (itemType >= 0 && itemType <= 3)
         {

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     #region vars
+
     float speed = 5;
     bool isMoving;
     Grid gm;
@@ -27,77 +28,21 @@ public class Player : MonoBehaviour
     MeshRenderer ren;
 
     #endregion
-
-    #region movement functions
-    IEnumerator MoveRight(Vector3 nextPos)
+    
+    IEnumerator Move(Vector3 nextPos)
     {
-        var speedVector = new Vector3(speed, 0, 0);
-        transform.position += (speedVector * Time.deltaTime);
-        if (transform.position.x < nextPos.x)
+        var mov = Vector3.Normalize(nextPos - transform.position) * speed * Time.deltaTime;
+        if (Vector3.Distance(nextPos, transform.position) > Vector3.Magnitude(mov))
         {
+            transform.position += mov;
             yield return new WaitForEndOfFrame();
-            StartCoroutine(MoveRight(nextPos));
+            StartCoroutine(Move(nextPos));
         }
         else
         {
             transform.position = nextPos;
             isMoving = false;
         }
-    }
-
-    IEnumerator MoveLeft(Vector3 nextPos)
-    {
-        var speedVector = new Vector3(speed, 0, 0);
-        transform.position -= (speedVector * Time.deltaTime);
-        if (transform.position.x > nextPos.x)
-        {
-            yield return new WaitForEndOfFrame();
-            StartCoroutine(MoveLeft(nextPos));
-        }
-        else
-        {
-            transform.position = nextPos;
-            isMoving = false;
-        }
-    }
-
-    IEnumerator MoveUp(Vector3 nextPos)
-    {
-        var speedVector = new Vector3(0, 0, speed);
-        transform.position += (speedVector * Time.deltaTime);
-        if (transform.position.z < nextPos.z)
-        {
-            yield return new WaitForEndOfFrame();
-            StartCoroutine(MoveUp(nextPos));
-        }
-        else
-        {
-            transform.position = nextPos;
-            isMoving = false;
-        }
-    }
-
-    IEnumerator MoveDown(Vector3 nextPos)
-    {
-        var speedVector = new Vector3(0, 0, speed);
-        transform.position -= (speedVector * Time.deltaTime);
-        if (transform.position.z > nextPos.z)
-        {
-            yield return new WaitForEndOfFrame();
-            StartCoroutine(MoveDown(nextPos));
-        }
-        else
-        {
-            transform.position = nextPos;
-            isMoving = false;
-        }
-    }
-    #endregion
-
-    private void OnValidate()
-    {
-        if (speed <= 0)
-            speed = 1;
     }
 
     private void Start()
@@ -105,7 +50,6 @@ public class Player : MonoBehaviour
         gm = FindObjectOfType<Grid>();
         Debug.Log(gm.ToString());
         ren = GetComponent<MeshRenderer>();
-
         cars = GameObject.FindGameObjectsWithTag("car");
     }
 
@@ -168,7 +112,6 @@ public class Player : MonoBehaviour
             gasUiText.text = "" + (heldItem - 6);
         }
 
-
         if (!isMoving && Input.GetKey(KeyCode.W))
         {
             if (carComp)
@@ -179,31 +122,21 @@ public class Player : MonoBehaviour
                     {
                         Vector3 nextPos = Vector3.zero;
                         if (carComp.direction == 0)
-                            nextPos = transform.position + new Vector3(0, 0, 1);
+                            nextPos = new Vector3(Mathf.RoundToInt(transform.position.x), 0, Mathf.RoundToInt(transform.position.z) + 1);
                         if (carComp.direction == 2)
-                            nextPos = new Vector3(carComp.transform.position.x, 0, carComp.transform.position.z + carComp.length);
-                        if (gm.grid[(int)nextPos.x][(int)nextPos.z] == 0)
+                            nextPos = new Vector3(Mathf.RoundToInt(carComp.transform.position.x), 0, Mathf.RoundToInt(carComp.transform.position.z) + carComp.length);
+                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 0)
                         {
-                            if (carComp.direction == 0)
+                            for (int i = 0; i < carComp.length; i++)
                             {
-                                for (int i = 0; i < carComp.length; i++)
-                                {
-                                    gm.grid[(int)transform.position.x][(int)transform.position.z - i] = 0;
-                                }
-                            }
-                            if (carComp.direction == 2)
-                            {
-                                for (int i = 0; i < carComp.length; i++)
-                                {
-                                    gm.grid[(int)transform.position.x][(int)transform.position.z + i] = 0;
-                                }
+                                gm.grid[Mathf.RoundToInt(transform.position.x)][Mathf.RoundToInt(transform.position.z + (i * (carComp.direction - 1)))] = 1;
                             }
                             nextPos = transform.position + new Vector3(0, 0, 1);
-                            StartCoroutine(carComp.MoveUp(nextPos));
+                            StartCoroutine(carComp.Move(nextPos));
                             carComp.isMoving = true;
                             carComp.gas--;
                             nextPos = transform.position + new Vector3(0, 0, 1);
-                            StartCoroutine(MoveUp(nextPos));
+                            StartCoroutine(Move(nextPos));
                             isMoving = true;
                         }
                     }
@@ -222,30 +155,30 @@ public class Player : MonoBehaviour
             if (!car || ((carComp.direction == 1 || carComp.direction == 3) && !fixing))
             {
                 var nextPos = transform.position + new Vector3(0, 0, 1);
-                if (gm.grid[(int)nextPos.x][(int)nextPos.z] == 0 || gm.grid[(int)nextPos.x][(int)nextPos.z] == 4)
+                if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 0 || gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 4)
                 {
-                    StartCoroutine(MoveUp(nextPos));
+                    StartCoroutine(Move(nextPos));
                     isMoving = true;
                 }
-                if (gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5 && gm.grid[(int)nextPos.x][(int)nextPos.z] <= 15)
+                if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 15)
                 {
-                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5 && gm.grid[(int)nextPos.x][(int)nextPos.z] <= 8)
+                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 8)
                     {
-                        while (heldItem < 4 && gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5)
+                        while (heldItem < 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5)
                         {
                             heldItem++;
-                            gm.grid[(int)nextPos.x][(int)nextPos.z]--;
+                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)]--;
                         }
-                        if (gm.grid[(int)nextPos.x][(int)nextPos.z] < 5)
-                            gm.grid[(int)nextPos.x][(int)nextPos.z] = 0;
+                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] < 5)
+                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = 0;
                     }
                     else
                     {
                     int buffer = heldItem + 4;
                     if (heldItem == 0)
                         buffer = 0;
-                    heldItem = gm.grid[(int)nextPos.x][(int)nextPos.z] - 4;
-                    gm.grid[(int)nextPos.x][(int)nextPos.z] = buffer;
+                    heldItem = gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] - 4;
+                    gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = buffer;
                     }
                     isMoving = true;
                     StartCoroutine(Stall());
@@ -267,28 +200,18 @@ public class Player : MonoBehaviour
                             nextPos = transform.position - new Vector3(1, 0, 0);
                         if (carComp.direction == 3)
                             nextPos = new Vector3(carComp.transform.position.x - carComp.length, 0, carComp.transform.position.z);
-                        if (gm.grid[(int)nextPos.x][(int)nextPos.z] == 0)
+                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 0)
                         {
-                            if (carComp.direction == 1)
+                            for (int i = 1; i < carComp.length; i++)
                             {
-                                for (int i = 0; i < carComp.length; i++)
-                                {
-                                    gm.grid[(int)transform.position.x + i][(int)transform.position.z] = 0;
-                                }
-                            }
-                            if (carComp.direction == 3)
-                            {
-                                for (int i = 0; i < carComp.length; i++)
-                                {
-                                    gm.grid[(int)transform.position.x - i][(int)transform.position.z] = 0;
-                                }
+                                gm.grid[Mathf.RoundToInt(transform.position.x + (i * (2 - carComp.direction)))][Mathf.RoundToInt(transform.position.z)] = 1;
                             }
                             nextPos = transform.position - new Vector3(1, 0, 0);
-                            StartCoroutine(carComp.MoveLeft(nextPos));
+                            StartCoroutine(carComp.Move(nextPos));
                             carComp.isMoving = true;
                             carComp.gas--;
                             nextPos = transform.position - new Vector3(1, 0, 0);
-                            StartCoroutine(MoveLeft(nextPos));
+                            StartCoroutine(Move(nextPos));
                             isMoving = true;
                         }
                     }
@@ -315,30 +238,30 @@ public class Player : MonoBehaviour
             if (!car || ((carComp.direction == 0 || carComp.direction == 2) && !fixing))
             {
                 var nextPos = transform.position - new Vector3(1, 0, 0);
-                if (gm.grid[(int)nextPos.x][(int)nextPos.z] == 0 || gm.grid[(int)nextPos.x][(int)nextPos.z] == 3)
+                if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 0 || gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 3)
                 {
-                    StartCoroutine(MoveLeft(nextPos));
+                    StartCoroutine(Move(nextPos));
                     isMoving = true;
                 }
-                if (gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5 && gm.grid[(int)nextPos.x][(int)nextPos.z] <= 15)
+                if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 15)
                 {
-                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5 && gm.grid[(int)nextPos.x][(int)nextPos.z] <= 8)
+                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 8)
                     {
-                        while (heldItem < 4 && gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5)
+                        while (heldItem < 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5)
                         {
                             heldItem++;
-                            gm.grid[(int)nextPos.x][(int)nextPos.z]--;
+                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)]--;
                         }
-                        if (gm.grid[(int)nextPos.x][(int)nextPos.z] < 5)
-                            gm.grid[(int)nextPos.x][(int)nextPos.z] = 0;
+                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] < 5)
+                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = 0;
                     }
                     else
                     {
                         int buffer = heldItem + 4;
                         if (heldItem == 0)
                             buffer = 0;
-                        heldItem = gm.grid[(int)nextPos.x][(int)nextPos.z] - 4;
-                        gm.grid[(int)nextPos.x][(int)nextPos.z] = buffer;
+                        heldItem = gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] - 4;
+                        gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = buffer;
                     }
                     isMoving = true;
                     StartCoroutine(Stall());
@@ -360,28 +283,18 @@ public class Player : MonoBehaviour
                             nextPos = new Vector3(carComp.transform.position.x, 0, carComp.transform.position.z - carComp.length);
                         if (carComp.direction == 2)
                             nextPos = transform.position - new Vector3(0, 0, 1);
-                        if (gm.grid[(int)nextPos.x][(int)nextPos.z] == 0)
+                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 0)
                         {
-                            if (carComp.direction == 0)
+                            for (int i = 1; i < carComp.length; i++)
                             {
-                                for (int i = 0; i < carComp.length; i++)
-                                {
-                                    gm.grid[(int)transform.position.x][(int)transform.position.z - i] = 0;
-                                }
-                            }
-                            if (carComp.direction == 2)
-                            {
-                                for (int i = 0; i < carComp.length; i++)
-                                {
-                                    gm.grid[(int)transform.position.x][(int)transform.position.z + i] = 0;
-                                }
+                                gm.grid[Mathf.RoundToInt(transform.position.x)][Mathf.RoundToInt(transform.position.z + (i * (carComp.direction - 1)))] = 1;
                             }
                             nextPos = transform.position - new Vector3(0, 0, 1);
-                            StartCoroutine(carComp.MoveDown(nextPos));
+                            StartCoroutine(carComp.Move(nextPos));
                             carComp.isMoving = true;
                             carComp.gas--;
                             nextPos = transform.position - new Vector3(0, 0, 1);
-                            StartCoroutine(MoveDown(nextPos));
+                            StartCoroutine(Move(nextPos));
                             isMoving = true;
                         }
                     }
@@ -400,30 +313,30 @@ public class Player : MonoBehaviour
             if (!car || ((carComp.direction == 1 || carComp.direction == 3) && !fixing))
             {
                 var nextPos = transform.position - new Vector3(0, 0, 1);
-                if (gm.grid[(int)nextPos.x][(int)nextPos.z] == 0 || gm.grid[(int)nextPos.x][(int)nextPos.z] == 4)
+                if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 0 || gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 4)
                 {
-                    StartCoroutine(MoveDown(nextPos));
+                    StartCoroutine(Move(nextPos));
                     isMoving = true;
                 }
-                if (gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5 && gm.grid[(int)nextPos.x][(int)nextPos.z] <= 15)
+                if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 15)
                 {
-                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5 && gm.grid[(int)nextPos.x][(int)nextPos.z] <= 8)
+                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 8)
                     {
-                        while (heldItem < 4 && gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5)
+                        while (heldItem < 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5)
                         {
                             heldItem++;
-                            gm.grid[(int)nextPos.x][(int)nextPos.z]--;
+                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)]--;
                         }
-                        if (gm.grid[(int)nextPos.x][(int)nextPos.z] < 5)
-                            gm.grid[(int)nextPos.x][(int)nextPos.z] = 0;
+                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] < 5)
+                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = 0;
                     }
                     else
                     {
                         int buffer = heldItem + 4;
                         if (heldItem == 0)
                             buffer = 0;
-                        heldItem = gm.grid[(int)nextPos.x][(int)nextPos.z] - 4;
-                        gm.grid[(int)nextPos.x][(int)nextPos.z] = buffer;
+                        heldItem = gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] - 4;
+                        gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = buffer;
                     }
                     isMoving = true;
                     StartCoroutine(Stall());
@@ -445,28 +358,18 @@ public class Player : MonoBehaviour
                             nextPos = new Vector3(carComp.transform.position.x + carComp.length, 0, carComp.transform.position.z);
                         if (carComp.direction == 3)
                             nextPos = transform.position + new Vector3(1, 0, 0);
-                        if (gm.grid[(int)nextPos.x][(int)nextPos.z] == 0 || gm.grid[(int)nextPos.x][(int)nextPos.z] == 16)
+                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 0 || gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 16)
                         {
-                            if (carComp.direction == 1)
+                            for (int i = 1; i < carComp.length; i++)
                             {
-                                for (int i = 0; i < carComp.length; i++)
-                                {
-                                    gm.grid[(int)transform.position.x + i][(int)transform.position.z] = 0;
-                                }
-                            }
-                            if (carComp.direction == 3)
-                            {
-                                for (int i = 0; i < carComp.length; i++)
-                                {
-                                    gm.grid[(int)transform.position.x - i][(int)transform.position.z] = 0;
-                                }
+                                gm.grid[Mathf.RoundToInt(transform.position.x + (i * (2 - carComp.direction)))][Mathf.RoundToInt(transform.position.z)] = 1;
                             }
                             nextPos = transform.position + new Vector3(1, 0, 0);
-                            StartCoroutine(carComp.MoveRight(nextPos));
+                            StartCoroutine(carComp.Move(nextPos));
                             carComp.isMoving = true;
                             carComp.gas--;
                             nextPos = transform.position + new Vector3(1, 0, 0);
-                            StartCoroutine(MoveRight(nextPos));
+                            StartCoroutine(Move(nextPos));
                             isMoving = true;
                         }
                     }
@@ -501,30 +404,30 @@ public class Player : MonoBehaviour
             if (!car || ((carComp.direction == 0 || carComp.direction == 2) && !fixing))
             {
                 var nextPos = transform.position + new Vector3(1, 0, 0);
-                if (gm.grid[(int)nextPos.x][(int)nextPos.z] == 0 || gm.grid[(int)nextPos.x][(int)nextPos.z] == 3)
+                if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 0 || gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 3)
                 {
-                    StartCoroutine(MoveRight(nextPos));
+                    StartCoroutine(Move(nextPos));
                     isMoving = true;
                 }
-                if (gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5 && gm.grid[(int)nextPos.x][(int)nextPos.z] <= 15)
+                if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 15)
                 {
-                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5 && gm.grid[(int)nextPos.x][(int)nextPos.z] <= 8)
+                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 8)
                     {
-                        while (heldItem < 4 && gm.grid[(int)nextPos.x][(int)nextPos.z] >= 5)
+                        while (heldItem < 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5)
                         {
                             heldItem++;
-                            gm.grid[(int)nextPos.x][(int)nextPos.z]--;
+                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)]--;
                         }
-                        if (gm.grid[(int)nextPos.x][(int)nextPos.z] < 5)
-                            gm.grid[(int)nextPos.x][(int)nextPos.z] = 0;
+                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] < 5)
+                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = 0;
                     }
                     else
                     {
                         int buffer = heldItem + 4;
                         if (heldItem == 0)
                             buffer = 0;
-                        heldItem = gm.grid[(int)nextPos.x][(int)nextPos.z] - 4;
-                        gm.grid[(int)nextPos.x][(int)nextPos.z] = buffer;
+                        heldItem = gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] - 4;
+                        gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = buffer;
                     }
                     isMoving = true;
                     StartCoroutine(Stall());
@@ -544,8 +447,8 @@ public class Player : MonoBehaviour
     {
         foreach (GameObject car in cars)
         {
-            if (transform.position.x == car.transform.position.x &&
-            transform.position.z == car.transform.position.z)
+            if (Mathf.Abs(transform.position.x - car.transform.position.x) <= 0.5f &&
+            Mathf.Abs(transform.position.z - car.transform.position.z) <= 0.5f)
             {
                 return car;
             }

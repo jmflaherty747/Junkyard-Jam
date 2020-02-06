@@ -10,6 +10,6 @@ public class Obstacle : MonoBehaviour
     private void Start()
     {
         gm = FindObjectOfType<Grid>();
-        gm.grid[(int)transform.position.x][(int)transform.position.z] = 1;
+        gm.grid[Mathf.RoundToInt(transform.position.x)][Mathf.RoundToInt(transform.position.z)] = 1;
     }
 }
