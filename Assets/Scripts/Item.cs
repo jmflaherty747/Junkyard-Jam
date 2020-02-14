@@ -7,15 +7,13 @@ public class Item : MonoBehaviour
     #region vars
     Grid gm;
     [Tooltip("0-3=Wheel,4=Battery,5-10=Canister")] [SerializeField] int itemType;
-    public Material t,b,g;
-    Renderer mat;
+    public GameObject t, b, g;
     #endregion
 
     private void Start()
     {
         gm = FindObjectOfType<Grid>();
         gm.grid[Mathf.RoundToInt(transform.position.x)][Mathf.RoundToInt(transform.position.z)] = 5 + itemType;
-        mat = GetComponent<Renderer>();
     }
 
     private void Update()
@@ -29,15 +27,21 @@ public class Item : MonoBehaviour
 
         if (itemType >= 0 && itemType <= 3)
         {
-            mat.material = t;
+            t.SetActive(true);
+            b.SetActive(false);
+            g.SetActive(false);
         }
         if (itemType == 4)
         {
-            mat.material = b;
+            t.SetActive(false);
+            b.SetActive(true);
+            g.SetActive(false);
         }
         if (itemType >= 5 && itemType <= 10)
         {
-            mat.material = g;
+            t.SetActive(false);
+            b.SetActive(false);
+            g.SetActive(true);
         }
     }
 }

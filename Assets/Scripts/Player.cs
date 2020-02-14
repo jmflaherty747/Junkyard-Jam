@@ -129,7 +129,7 @@ public class Player : MonoBehaviour
                         {
                             for (int i = 0; i < carComp.length; i++)
                             {
-                                gm.grid[Mathf.RoundToInt(transform.position.x)][Mathf.RoundToInt(transform.position.z + (i * (carComp.direction - 1)))] = 1;
+                                gm.grid[Mathf.RoundToInt(transform.position.x)][Mathf.RoundToInt(transform.position.z + (i * (carComp.direction - 1)))] = 0;
                             }
                             nextPos = transform.position + new Vector3(0, 0, 1);
                             StartCoroutine(carComp.Move(nextPos));
@@ -202,9 +202,9 @@ public class Player : MonoBehaviour
                             nextPos = new Vector3(carComp.transform.position.x - carComp.length, 0, carComp.transform.position.z);
                         if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 0)
                         {
-                            for (int i = 1; i < carComp.length; i++)
+                            for (int i = 0; i < carComp.length; i++)
                             {
-                                gm.grid[Mathf.RoundToInt(transform.position.x + (i * (2 - carComp.direction)))][Mathf.RoundToInt(transform.position.z)] = 1;
+                                gm.grid[Mathf.RoundToInt(transform.position.x + (i * (2 - carComp.direction)))][Mathf.RoundToInt(transform.position.z)] = 0;
                             }
                             nextPos = transform.position - new Vector3(1, 0, 0);
                             StartCoroutine(carComp.Move(nextPos));
@@ -285,9 +285,9 @@ public class Player : MonoBehaviour
                             nextPos = transform.position - new Vector3(0, 0, 1);
                         if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 0)
                         {
-                            for (int i = 1; i < carComp.length; i++)
+                            for (int i = 0; i < carComp.length; i++)
                             {
-                                gm.grid[Mathf.RoundToInt(transform.position.x)][Mathf.RoundToInt(transform.position.z + (i * (carComp.direction - 1)))] = 1;
+                                gm.grid[Mathf.RoundToInt(transform.position.x)][Mathf.RoundToInt(transform.position.z + (i * (carComp.direction - 1)))] = 0;
                             }
                             nextPos = transform.position - new Vector3(0, 0, 1);
                             StartCoroutine(carComp.Move(nextPos));
@@ -360,9 +360,9 @@ public class Player : MonoBehaviour
                             nextPos = transform.position + new Vector3(1, 0, 0);
                         if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 0 || gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 16)
                         {
-                            for (int i = 1; i < carComp.length; i++)
+                            for (int i = 0; i < carComp.length; i++)
                             {
-                                gm.grid[Mathf.RoundToInt(transform.position.x + (i * (2 - carComp.direction)))][Mathf.RoundToInt(transform.position.z)] = 1;
+                                gm.grid[Mathf.RoundToInt(transform.position.x + (i * (2 - carComp.direction)))][Mathf.RoundToInt(transform.position.z)] = 0;
                             }
                             nextPos = transform.position + new Vector3(1, 0, 0);
                             StartCoroutine(carComp.Move(nextPos));
