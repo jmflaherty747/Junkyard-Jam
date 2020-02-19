@@ -140,6 +140,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4758883785762363416, guid: a5cfe8ba33d52fd4ebd2dc561be86340,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6235706337012929894, guid: a5cfe8ba33d52fd4ebd2dc561be86340,
         type: 3}
       propertyPath: m_Name
@@ -1244,6 +1249,11 @@ PrefabInstance:
       propertyPath: carUiText
       value: 
       objectReference: {fileID: 1072553048}
+    - target: {fileID: 7357683429632962275, guid: e4aa7cfd166b94046b759e9205619a73,
+        type: 3}
+      propertyPath: battery
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7357683429632962277, guid: e4aa7cfd166b94046b759e9205619a73,
         type: 3}
       propertyPath: m_Name
@@ -2431,7 +2441,7 @@ PrefabInstance:
     - target: {fileID: 1732648218098705375, guid: 54d047a782631dd4fafd982c38d27fc1,
         type: 3}
       propertyPath: m_Text
-      value: 'LEVEL ?
+      value: 'LEVEL 1
 
 '
       objectReference: {fileID: 0}

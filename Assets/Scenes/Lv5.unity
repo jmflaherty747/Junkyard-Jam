@@ -1474,6 +1474,11 @@ PrefabInstance:
       propertyPath: tires
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7342845604125844674, guid: f9b86667dfeafa449b210151a3fc7240,
+        type: 3}
+      propertyPath: gas
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7342845604125844678, guid: f9b86667dfeafa449b210151a3fc7240,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1917,6 +1922,11 @@ PrefabInstance:
       propertyPath: carUiText
       value: 
       objectReference: {fileID: 1072553048}
+    - target: {fileID: 7357683429632962275, guid: 7114373c482295b42bee97c68d83e678,
+        type: 3}
+      propertyPath: gas
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7357683429632962277, guid: 7114373c482295b42bee97c68d83e678,
         type: 3}
       propertyPath: m_Name
@@ -2796,7 +2806,7 @@ PrefabInstance:
     - target: {fileID: 1732648218098705375, guid: 54d047a782631dd4fafd982c38d27fc1,
         type: 3}
       propertyPath: m_Text
-      value: 'LEVEL ?
+      value: 'LEVEL 5
 
 '
       objectReference: {fileID: 0}
