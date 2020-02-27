@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -140,6 +140,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4758883785762363416, guid: a5cfe8ba33d52fd4ebd2dc561be86340,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6235706337012929894, guid: a5cfe8ba33d52fd4ebd2dc561be86340,
         type: 3}
       propertyPath: m_Name
@@ -2815,6 +2820,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CarUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 6041405038363973324, guid: c66fe497562b66f47bf8a8a3966bfbcb,
+        type: 3}
+      propertyPath: m_TagString
+      value: carText
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c66fe497562b66f47bf8a8a3966bfbcb, type: 3}

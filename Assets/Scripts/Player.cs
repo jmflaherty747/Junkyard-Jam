@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         gm = FindObjectOfType<Grid>();
-        Debug.Log(gm.ToString());
+        //Debug.Log(gm.ToString());
         ren = GetComponent<MeshRenderer>();
         cars = GameObject.FindGameObjectsWithTag("car");
     }
@@ -351,7 +351,7 @@ public class Player : MonoBehaviour
             {
                 if (!fixing)
                 {
-                    if ((carComp.direction == 1 || carComp.direction == 3) && carComp.tires == 4 && carComp.battery && carComp.gas >= 1)
+                    if ((carComp.direction == 1 || carComp.direction == 3) && carComp.tires == 4 && carComp.battery && carComp.gas >= 1 && transform.position != new Vector3(7, 0, 4))
                     {
                         Vector3 nextPos = Vector3.zero;
                         if (carComp.direction == 1)
@@ -447,8 +447,8 @@ public class Player : MonoBehaviour
     {
         foreach (GameObject car in cars)
         {
-            if (Mathf.Abs(transform.position.x - car.transform.position.x) <= 0.5f &&
-            Mathf.Abs(transform.position.z - car.transform.position.z) <= 0.5f)
+            if (Mathf.Abs(transform.position.x - car.transform.position.x) <= 0.25f &&
+            Mathf.Abs(transform.position.z - car.transform.position.z) <= 0.25f)
             {
                 return car;
             }
