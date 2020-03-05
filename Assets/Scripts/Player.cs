@@ -10,7 +10,11 @@ public class Player : MonoBehaviour
     bool isMoving;
     Grid gm;
     bool fixing = false;
-    [Tooltip("0=none,1-4=Wheel,5=Battery,6-11=Canister")] [SerializeField] int heldItem; //0=none,1-4=Wheel,5=Battery,6-11=Canister
+    public int gas = 0;
+    public bool can = false;
+    public int tires = 0;
+    public int battery = 0;
+    [Tooltip("0=none,1-4=Wheel,5=Battery,6-11=Canister")] [SerializeField] int heldItem;
 
 
     public GameObject[] cars;
@@ -161,28 +165,7 @@ public class Player : MonoBehaviour
                     isMoving = true;
                 }
                 if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 15)
-                {
-                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 8)
-                    {
-                        while (heldItem < 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5)
-                        {
-                            heldItem++;
-                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)]--;
-                        }
-                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] < 5)
-                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = 0;
-                    }
-                    else
-                    {
-                    int buffer = heldItem + 4;
-                    if (heldItem == 0)
-                        buffer = 0;
-                    heldItem = gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] - 4;
-                    gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = buffer;
-                    }
-                    isMoving = true;
-                    StartCoroutine(Stall());
-                }
+                    GroundItem(nextPos);
             }
             //Debug.Log(gm.ToString());
         }
@@ -244,28 +227,7 @@ public class Player : MonoBehaviour
                     isMoving = true;
                 }
                 if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 15)
-                {
-                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 8)
-                    {
-                        while (heldItem < 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5)
-                        {
-                            heldItem++;
-                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)]--;
-                        }
-                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] < 5)
-                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = 0;
-                    }
-                    else
-                    {
-                        int buffer = heldItem + 4;
-                        if (heldItem == 0)
-                            buffer = 0;
-                        heldItem = gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] - 4;
-                        gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = buffer;
-                    }
-                    isMoving = true;
-                    StartCoroutine(Stall());
-                }
+                    GroundItem(nextPos);
             }
             //Debug.Log(gm.ToString());
         }
@@ -319,28 +281,7 @@ public class Player : MonoBehaviour
                     isMoving = true;
                 }
                 if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 15)
-                {
-                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 8)
-                    {
-                        while (heldItem < 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5)
-                        {
-                            heldItem++;
-                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)]--;
-                        }
-                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] < 5)
-                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = 0;
-                    }
-                    else
-                    {
-                        int buffer = heldItem + 4;
-                        if (heldItem == 0)
-                            buffer = 0;
-                        heldItem = gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] - 4;
-                        gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = buffer;
-                    }
-                    isMoving = true;
-                    StartCoroutine(Stall());
-                }
+                    GroundItem(nextPos);
             }
             //Debug.Log(gm.ToString());
         }
@@ -410,31 +351,44 @@ public class Player : MonoBehaviour
                     isMoving = true;
                 }
                 if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 15)
-                {
-                    if (heldItem >= 1 && heldItem <= 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 8)
-                    {
-                        while (heldItem < 4 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5)
-                        {
-                            heldItem++;
-                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)]--;
-                        }
-                        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] < 5)
-                            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = 0;
-                    }
-                    else
-                    {
-                        int buffer = heldItem + 4;
-                        if (heldItem == 0)
-                            buffer = 0;
-                        heldItem = gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] - 4;
-                        gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = buffer;
-                    }
-                    isMoving = true;
-                    StartCoroutine(Stall());
-                }
+                    GroundItem(nextPos);
             }
             //Debug.Log(gm.ToString());
         }
+    }
+
+    private void GroundItem(Vector3 nextPos)
+    {
+        if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 8)
+        {
+            while (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 5)
+            {
+                tires++;
+                gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)]--;
+            }
+            if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] < 5)
+                gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = 0;
+        }
+        else
+                    if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] == 9)
+        {
+            battery++;
+            gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = 0;
+        }
+        else
+                    if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 10 && gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] <= 15)
+        {
+            can = true;
+            while (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] >= 10)
+            {
+                gas++;
+                gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)]--;
+            }
+            if (gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] < 10)
+                gm.grid[Mathf.RoundToInt(nextPos.x)][Mathf.RoundToInt(nextPos.z)] = 0;
+        }
+        isMoving = true;
+        StartCoroutine(Stall());
     }
 
     IEnumerator Stall()
